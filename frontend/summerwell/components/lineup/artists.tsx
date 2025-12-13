@@ -1,11 +1,13 @@
-import { View, Text, SectionList } from "react-native";
+import { View, Text, SectionList, Pressable } from "react-native";
 import { Typography } from "@/constants/typography";
 import { Colors, Palette } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import Artist from "@/components/ui/artist";
+import React, { useState } from "react";
 
 export default function Artists() {
   const theme = Colors[useColorScheme() ?? "light"];
+  const [activeTab, setActiveTab] = useState<"All" | "Friday" | "Saturday" | "Sunday">("All");
 
 
 
@@ -44,10 +46,18 @@ export default function Artists() {
       
       {/* SUBHEADER */}
       <View style={{ backgroundColor: theme.subheader, height: 45, justifyContent: "space-between", alignItems: "center", flexDirection: "row", paddingHorizontal: 30 }}>
-        <Text style={[Typography.Header3, { color: Palette.white }]}>All</Text>
-        <Text style={[Typography.Header3, { color: Palette.white }]}>Friday</Text>
-        <Text style={[Typography.Header3, { color: Palette.white }]}>Saturday</Text>
-        <Text style={[Typography.Header3, { color: Palette.white }]}>Sunday</Text>
+        <Pressable onPress={() => setActiveTab("All")}>
+          <Text style={[Typography.Header3, { color: activeTab === "All" ? theme.selected : Palette.white }]}>All</Text>
+        </Pressable>
+        <Pressable onPress={() => setActiveTab("Friday")}>
+          <Text style={[Typography.Header3, { color: activeTab === "Friday" ? theme.selected : Palette.white }]}>Friday</Text>
+          </Pressable>
+        <Pressable onPress={() => setActiveTab("Saturday")}>
+          <Text style={[Typography.Header3, { color: activeTab === "Saturday" ? theme.selected : Palette.white }]}>Saturday</Text>
+          </Pressable>
+        <Pressable onPress={() => setActiveTab("Sunday")}>
+          <Text style={[Typography.Header3, { color: activeTab === "Sunday" ? theme.selected : Palette.white }]}>Sunday</Text>
+        </Pressable>
       </View>
 
       <SectionList
