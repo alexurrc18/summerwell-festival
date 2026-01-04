@@ -32,7 +32,7 @@ export default function TicketsScreen() {
       {/* ADD WRISTBAND */}
             <View style={{ backgroundColor: theme.devider1_50, height: 32, justifyContent: "center", alignItems: "center", flexDirection: "row", paddingHorizontal: 60 }}>
                 <Text style={[Typography.Regular, { color: theme.textDark }]}>Got a physical ticket? </Text>
-              <Pressable >
+              <Pressable onPress={() => router.push('/(tabs)/wallet/wristband')}>
                 <Text style={[Typography.Body1, { color: theme.selected }]}>Add a wristband</Text>
               </Pressable>
             </View>

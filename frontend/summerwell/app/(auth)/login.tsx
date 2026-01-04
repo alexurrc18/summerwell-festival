@@ -1,7 +1,6 @@
-// app/login.tsx
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router"; // Importăm routerul
+import { useRouter } from "expo-router";
 import { Typography } from "@/constants/typography";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -10,7 +9,7 @@ import ChevronLeftIcon from "@/assets/icons/icon_chevron-left.svg";
 
 export default function LoginScreen() {
     const theme = Colors[useColorScheme() ?? "light"];
-    const router = useRouter(); // Hook pentru navigare
+    const router = useRouter();
     
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

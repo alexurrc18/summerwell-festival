@@ -10,6 +10,7 @@ import Button from "./button";
 
 import PlusIcon from "@/assets/icons/icon_plus.svg";
 import ChevronIcon from "@/assets/icons/icon_chevron-left.svg";
+import TrashIcon from "@/assets/icons/icon_trash.svg";
 import QRCode from 'react-native-qrcode-svg';
 
 
@@ -27,7 +28,7 @@ type Props = {
 };
 
 
-export default function Ticket({ type, name, description, color, price, holder, ticketID, wristbandID = "Not claimed", balance = "0.00" }: Props) {
+export default function Ticket({ type, name = "Not set", description, color = Palette.orange, price = "Unknown", holder = "Not claimed", ticketID = "Not claimed", wristbandID = "Not claimed", balance = "0.00", inCart = false}: Props) {
     const theme = Colors[useColorScheme() ?? "light"];
     const [expanded, setExpanded] = useState(false);
 
@@ -48,21 +49,21 @@ export default function Ticket({ type, name, description, color, price, holder, 
                         <Text style={[Typography.Header3, { color: theme.textDark }]} numberOfLines={2} >
                             {name}
                         </Text>
-                        <Text style={[Typography.Body2, { color: theme.devider2 }]} numberOfLines={1}>
+                        <Text style={[Typography.Body2, { color: theme.textDesc }]} numberOfLines={1}>
                             {description}
                         </Text>
                     </View>
 
                     <View style={{ alignItems: "flex-end", minWidth: 60 }}>
                         <Text style={[Typography.Header3, { color: theme.textDark }]}>{price}</Text>
-                        <Text style={[Typography.Body2, { color: theme.devider2 }]}>+8% fee</Text>
+                        <Text style={[Typography.Body2, { color: theme.textDesc }]}>+8% fee</Text>
                     </View>
                 </View>
 
                 {/* BUTTON */}
                 <View style={{ backgroundColor: Palette.orange, width: 50, justifyContent: "center", alignItems: "center", borderTopRightRadius: 15, borderBottomRightRadius: 15 }}>
 
-                    <Button buttonStyle="icon" icon={<PlusIcon fill={Palette.white} width={12} height={12} />} />
+                    <Button buttonStyle="icon" icon={inCart === false ? <PlusIcon fill={Palette.white} width={12} height={12} /> : <TrashIcon fill={Palette.white} width={20} height={20} />} />
                 </View>
             </View>
         )

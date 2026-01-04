@@ -25,7 +25,7 @@ export default function Artist({ name, image, schedule = false, time = "TBA", wi
     if (!schedule) {
         return (
             <View style={{ width: 177, height: 177 }}>
-                <Image source={{ uri: image }} contentFit="cover" style={{ width: "100%", height: "100%" }} />
+                <Image source={{ uri: image }} contentFit="cover" transition={250} style={{ width: "100%", height: "100%", backgroundColor: theme.devider1_50 }} />
 
                 <LinearGradient
                     colors={['transparent', Palette.black]}
@@ -43,7 +43,7 @@ export default function Artist({ name, image, schedule = false, time = "TBA", wi
     else {
         return (
             <View style={{ width: "100%", height: 62, flexDirection: "row", alignItems: "center", borderRadius: 11, padding: 3, borderColor: theme.devider3, borderWidth: 2.5, backgroundColor: theme.background }}>
-                <Image source={{ uri: image }} contentFit="cover" style={{ width: 52, height: 52, borderRadius: 7 }} />
+                <Image source={{ uri: image }} contentFit="cover" transition={250} style={{ width: 52, height: 52, borderRadius: 7, backgroundColor: theme.devider1_50 }} />
 
                 <View style={{ flex: 1, justifyContent: "center", marginLeft: 10, marginRight: 35 }}>
                     <Text numberOfLines={1} ellipsizeMode="tail" style={[Typography.Header3, { color: theme.textDark }]}>

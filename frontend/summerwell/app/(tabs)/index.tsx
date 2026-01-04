@@ -9,13 +9,15 @@ import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import Button from "@/components/ui/button";
 import Artist from "@/components/ui/artist";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 
 import BellIcon from "@/assets/icons/icon_bell.svg";
 
 export default function HomeScreen() {
   const theme = Colors[useColorScheme() ?? "light"];
   const insets = useSafeAreaInsets();
+
+  const router = useRouter();
 
   const player = useVideoPlayer(require("@/assets/videos/bg_video.mp4"), (p) => {
     p.loop = true;
@@ -30,9 +32,17 @@ export default function HomeScreen() {
   useEffect(() => {
     const sub = AppState.addEventListener("change", (state: string) => {
       if (state === "active") {
-        player.play();
+        try {
+          player.play();
+        } catch (error) {
+          console.log(error);
+        }
       } else {
-        player.pause()
+        try {
+          player.pause();
+        } catch (error) {
+          console.log(error);
+        }
       }
     });
 
@@ -42,9 +52,17 @@ export default function HomeScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      player.play();
+        try {
+          player.play();
+        } catch (error) {
+          console.log(error);
+        }
       return () => {
-        player.pause();
+        try {
+          player.pause();
+        } catch (error) {
+          console.log(error);
+        }
       };
     }, [player])
   );
@@ -53,10 +71,10 @@ export default function HomeScreen() {
     <View style={{ flex: 1, backgroundColor: theme.background }}>
 
       <View style={{ position: "absolute", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", top: insets.top, paddingLeft: 16, paddingRight: 16, zIndex: 10000 }}>
-            <Image source={require("@/assets/images/logo.png")} style={{ left:0, width: 40, height: 40, resizeMode: "contain"}}/>
-            <View style={{ right: 0 }} >
-            <Button buttonStyle="icon" icon={<BellIcon width={30} height={30} fill={theme.textLight} />} />
-            </View>
+        <Image source={require("@/assets/images/logo.png")} style={{ left: 0, width: 40, height: 40, resizeMode: "contain" }} />
+        <View style={{ right: 0 }} >
+          <Button buttonStyle="icon" icon={<BellIcon width={30} height={30} fill={theme.textLight} />} />
+        </View>
       </View>
 
       <ScrollView style={{ flex: 1 }}>
@@ -87,7 +105,7 @@ export default function HomeScreen() {
         </View>
 
         <View style={{ flex: 1, paddingBottom: 20 }}>
-          <Text style={[Typography.Header2, { color: theme.textDark, marginLeft: 16 }]}>Meet our artists:</Text>
+          <Text style={[Typography.Header2, { color: theme.textDark, marginLeft: 16 }]}>Meet the artists:</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 16 }} contentContainerStyle={{ gap: 10, paddingHorizontal: 16 }}>
 
             {/* Temporary artists -  to populate using backend */}
@@ -102,7 +120,12 @@ export default function HomeScreen() {
 
       {/* fixed footer */}
       <View style={{ paddingBottom: 8 }}>
-        <Button title="GET TICKETS BEFORE WE'RE OUT!" buttonStyle="important"></Button>
+        <Button title="GET TICKETS BEFORE WE'RE OUT!" buttonStyle="important" onPress={() => {
+          router.push("/wallet")
+          setTimeout(() => {
+            router.push("/wallet/tickets");
+          }, 0);
+        }}></Button>
       </View>
 
     </View>

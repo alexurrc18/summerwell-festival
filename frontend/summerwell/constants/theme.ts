@@ -29,10 +29,15 @@ export const Colors = {
     background: Palette.white,
     textDark: Palette.darkBlue,
     textLight: Palette.white,
+    textDesc: Palette.darkGray,
     bottomNav: Palette.gray,
     header: Palette.orange,
     subheader: Palette.darkBlue,
     selected: Palette.blue,
+
+    primary: Palette.blue,
+    secondary: Palette.orange,
+
 
     button1: Palette.blue,
     buttonAuth: Palette.blue,
@@ -52,10 +57,14 @@ export const Colors = {
     background: Palette.darkBlue,
     textDark: Palette.white,
     textLight: Palette.darkBlue,
+    textDesc: Palette.darkGray,
     bottomNav: Palette.navyBlue,
     header: Palette.blue,
     subheader: Palette.navyBlue,
     selected: Palette.orange,
+
+    primary: Palette.blue,
+    secondary: Palette.orange,
 
     button1: Palette.orange,
     buttonAuth: Palette.blue,

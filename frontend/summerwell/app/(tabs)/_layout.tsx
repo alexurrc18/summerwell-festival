@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CommonActions } from '@react-navigation/native';
 
 import { HapticTab } from "@/components/haptic-tab";
 import { Colors, Palette } from "@/constants/theme";
@@ -12,9 +13,6 @@ import WalletIcon from "@/assets/icons/icon_wallet.svg";
 import MoreIcon from "@/assets/icons/icon_dots-horizontal.svg";
 import CalendarIcon from "@/assets/icons/icon_calendar.svg";
 import { Typography } from "@/constants/typography";
-
-import Button from "@/components/ui/button";
-import FilterIcon from "@/assets/icons/icon_filter.svg";
 
 export default function TabLayout() {
   const theme = Colors[useColorScheme() ?? "light"];
@@ -64,9 +62,9 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <LocationIcon width={30} height={30} fill={color} />
           ),
-          headerShown: true, 
+          headerShown: true,
           headerTitleAlign: "center",
-          headerStyle: { backgroundColor: theme.header, height: 55+insets.top },
+          headerStyle: { backgroundColor: theme.header, height: 55 + insets.top },
           headerTitleStyle: { fontFamily: Typography.Header2.fontFamily, fontSize: Typography.Header2.fontSize, color: Palette.white },
           headerRightContainerStyle: { paddingRight: 16 },
           headerLeftContainerStyle: { paddingLeft: 16 },
@@ -89,12 +87,24 @@ export default function TabLayout() {
 
       <Tabs.Screen
         name="wallet"
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'wallet' }],
+              })
+            );
+          },
+        })}
         options={{
           title: "My Wallet",
-          tabBarIcon: ({ color}) => (
+          tabBarIcon: ({ color }) => (
             <WalletIcon width={30} height={30} fill={color} />
           ),
-          headerShown: false, 
+          headerShown: false,
         }}
       />
 
@@ -103,12 +113,12 @@ export default function TabLayout() {
         name="more"
         options={{
           title: undefined,
-          tabBarIcon: ({ color}) => (
+          tabBarIcon: ({ color }) => (
             <MoreIcon width={30} height={30} fill={color} />
           ),
         }}
       />
-  
+
 
 
 
