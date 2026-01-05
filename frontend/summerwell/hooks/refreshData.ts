@@ -7,7 +7,7 @@ export function useRefreshedData<Type>(endpoint: string, cacheKey: string) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // JSON data extractor and normalizer
+  // normalize data structure
   const normalizeData = (rawData: any): Type => {
     if (!rawData) return [] as unknown as Type;
 
@@ -16,6 +16,7 @@ export function useRefreshedData<Type>(endpoint: string, cacheKey: string) {
     }
 
     if (typeof rawData === 'object') {
+        if (rawData.app_settings && Array.isArray(rawData.app_settings)) return rawData.app_settings as Type;
         if (rawData.artists && Array.isArray(rawData.artists)) return rawData.artists as Type;
         if (rawData.stages && Array.isArray(rawData.stages)) return rawData.stages as Type;
         
@@ -27,50 +28,45 @@ export function useRefreshedData<Type>(endpoint: string, cacheKey: string) {
     return rawData as Type;
   };
 
-  // load from cache on mount
-  const loadFromCache = async () => {
+  // fetch api
+  const fetchData = async () => {
     try {
-      const cached = await AsyncStorage.getItem(cacheKey);
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        setData(normalizeData(parsed));
-      }
-    } catch (e) {
-      console.warn(`ERROR ${cacheKey}: `, e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadFromCache();
-  }, [cacheKey]);
-
-  // pull-to-refresh
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    try {
-      console.log(`[⟳] Refreshing ${endpoint}...`);
-      
       const response = await fetch(`${API_URL}${endpoint}`);
 
       if (response.ok) {
         const json = await response.json();
-        
         const cleanData = normalizeData(json);
         
         await AsyncStorage.setItem(cacheKey, JSON.stringify(cleanData));
-        
         setData(cleanData);
-        console.log("[✓] Data updated!");
       } else {
           console.warn(`ERROR: ${response.status} @ ${endpoint}`);
       }
     } catch (error) {
-      console.error("ERROR: ", error);
-    } finally {
-      setRefreshing(false);
+      console.error("Network ERROR: ", error);
     }
+  };
+
+  // load cache
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const cached = await AsyncStorage.getItem(cacheKey);
+        if (cached) setData(normalizeData(JSON.parse(cached)));
+      } catch (e) { console.warn(e); } 
+      finally { setLoading(false); }
+
+      await fetchData();
+    };
+
+    init();
+  }, [endpoint, cacheKey]);
+
+  // --- 4. PULL TO REFRESH ---
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchData();
+    setRefreshing(false);
   }, [endpoint, cacheKey]);
 
   return { data, loading, refreshing, onRefresh };

@@ -23,7 +23,7 @@ public class Artist {
     @Column(nullable = false, length = 24)
     private String name;
 
-    @Column(length = 150, nullable = false)
+    @Column(length = 500, nullable = false)
     private String image;
 
     @Column(name = "year", nullable = false)

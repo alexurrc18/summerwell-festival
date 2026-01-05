@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Image, Text, ScrollView, AppState } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useVideoPlayer, VideoView } from "expo-video";
+import { useFocusEffect, useRouter } from "expo-router";
 
 import { Typography } from "@/constants/typography";
 import { Palette } from "@/constants/theme";
@@ -9,9 +10,33 @@ import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import Button from "@/components/ui/button";
 import Artist from "@/components/ui/artist";
-import { useFocusEffect, useRouter } from "expo-router";
-
 import BellIcon from "@/assets/icons/icon_bell.svg";
+
+import { useRefreshedData } from "@/hooks/refreshData";
+
+
+type AppSettingsData = {
+  id: number;
+  option_name: string;
+  value: string;
+};
+
+const formatTime = (targetTime: number) => {
+    const now = Date.now();
+    const difference = targetTime - now;
+
+    if (difference <= 0) return "See you there!";
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    const pad = (n: number) => (n < 10 ? `0${n}` : n);
+
+    return `${pad(days)}:${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+  };
+
 
 export default function HomeScreen() {
   const theme = Colors[useColorScheme() ?? "light"];
@@ -19,15 +44,41 @@ export default function HomeScreen() {
 
   const router = useRouter();
 
+  // fetching app settings from cache
+  const { data: settings } = useRefreshedData<AppSettingsData[]>('/app_settings', 'cache_app_settings');
+
+
+  // countdown timer
+  const [timeLeft, setTimeLeft] = useState("SOON!");
+
+  useEffect(() => {
+    const dateSetting = settings?.find(setting => setting.option_name === 'dateStart');
+
+    if (!dateSetting) return;
+    const targetTime = new Date(dateSetting.value).getTime();
+    
+    if (isNaN(targetTime)) {
+        console.warn("ERROR: Invalid data set in database app_settings: ", dateSetting.value);
+        return;
+    }
+
+    setTimeLeft(formatTime(targetTime));
+
+    const interval = setInterval(() => {
+      setTimeLeft(formatTime(targetTime));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [settings]);
+
+
+
+  // player stuff
   const player = useVideoPlayer(require("@/assets/videos/bg_video.mp4"), (p) => {
     p.loop = true;
     p.muted = true;
     p.play();
   });
-
-
-
-  // player stuff
 
   useEffect(() => {
     const sub = AppState.addEventListener("change", (state: string) => {
@@ -86,7 +137,7 @@ export default function HomeScreen() {
             style={{ position: "absolute", top: 0, left: 0, right: 0, height: 375 }}
             contentFit="cover"
             nativeControls={false}
-            
+
           />
 
 
@@ -101,7 +152,7 @@ export default function HomeScreen() {
             />
 
             <Text style={[Typography.Body1, { color: Palette.white, width: "100%", textAlign: "center" }]}>See you at Summer Well 2026 in about:</Text>
-            <Text style={[Typography.Header1, { color: Palette.yellow, overflow: "visible", width: "100%", textAlign: "center", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 1, shadowRadius: 8 }]}>256:45:43:29</Text>
+            <Text style={[Typography.Header1, { color: Palette.yellow, overflow: "visible", width: "100%", textAlign: "center", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 1, shadowRadius: 8 }]}>{timeLeft}</Text>
           </View>
         </View>
 

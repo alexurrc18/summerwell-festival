@@ -12,8 +12,10 @@ import LocationIcon from "@/assets/icons/icon_location.svg";
 import WalletIcon from "@/assets/icons/icon_wallet.svg";
 import MoreIcon from "@/assets/icons/icon_dots-horizontal.svg";
 import CalendarIcon from "@/assets/icons/icon_calendar.svg";
+import FilterIcon from "@/assets/icons/icon_filter.svg";
 
 import Header from "@/components/ui/header";
+import Button from "@/components/ui/button";
 
 export default function TabLayout() {
   const theme = Colors[useColorScheme() ?? "light"];
@@ -25,8 +27,8 @@ export default function TabLayout() {
         tabBarActiveTintColor: theme.selected,
         tabBarInactiveTintColor: theme.textDark,
 
-        headerShown: false, 
-        
+        headerShown: false,
+
         tabBarButton: HapticTab,
         tabBarShowLabel: false,
         tabBarLabelStyle: { display: "none" },
@@ -54,23 +56,20 @@ export default function TabLayout() {
         }}
       />
 
-      {/* 2. MAP */}
-      <Tabs.Screen
-        name="map"
-        options={{
-          title: "Map",
-          tabBarIcon: ({ color }) => (
-            <LocationIcon width={30} height={30} fill={color} />
-          ),
-          headerShown: true,
-          header: () => (
-            <Header 
-              title="Map" 
-              backgroundColor={theme.header} 
-            />
-          ),
-        }}
-      />
+      {/* MAP */}
+<Tabs.Screen
+  name="map"
+  options={{
+    title: "Map",
+    tabBarIcon: ({ color }) => (
+      <LocationIcon width={30} height={30} fill={color} />
+    ),
+    headerShown: true,
+    header: () => (
+      <Header title="Map" backgroundColor={theme.header} />
+    ),
+  }}
+/>
 
       {/* LINEUP */}
       <Tabs.Screen
