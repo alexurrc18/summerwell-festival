@@ -9,13 +9,14 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "ios": {
+        "simulator": false,
+        "resourceClass": "m-medium" 
+      }
     },
     "production": {
       "autoIncrement": true
-    },
-    "ios": {
-      "buildType": "export"
     }
   },
   "submit": {

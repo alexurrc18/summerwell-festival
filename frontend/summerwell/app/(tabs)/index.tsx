@@ -12,7 +12,7 @@ import Button from "@/components/ui/button";
 import Artist from "@/components/ui/artist";
 import BellIcon from "@/assets/icons/icon_bell.svg";
 
-import { useRefreshedData } from "@/hooks/refreshData";
+import { useApiData } from "@/hooks/apiData";
 
 
 type AppSettingsData = {
@@ -45,7 +45,7 @@ export default function HomeScreen() {
   const router = useRouter();
 
   // fetching app settings from cache
-  const { data: settings } = useRefreshedData<AppSettingsData[]>('/app_settings', 'cache_app_settings');
+  const { data: settings } = useApiData<AppSettingsData[]>('/app_settings', 'cache_app_settings');
 
 
   // countdown timer

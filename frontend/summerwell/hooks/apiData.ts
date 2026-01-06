@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '@/constants/config';
 
-export function useRefreshedData<Type>(endpoint: string, cacheKey: string) {
+export function useApiData<Type>(endpoint: string, cacheKey: string) {
   const [data, setData] = useState<Type | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -12,17 +12,17 @@ export function useRefreshedData<Type>(endpoint: string, cacheKey: string) {
     if (!rawData) return [] as unknown as Type;
 
     if (Array.isArray(rawData)) {
-        return rawData as Type;
+      return rawData as Type;
     }
 
     if (typeof rawData === 'object') {
-        if (rawData.app_settings && Array.isArray(rawData.app_settings)) return rawData.app_settings as Type;
-        if (rawData.artists && Array.isArray(rawData.artists)) return rawData.artists as Type;
-        if (rawData.stages && Array.isArray(rawData.stages)) return rawData.stages as Type;
-        
-        const values = Object.values(rawData);
-        const foundArray = values.find(val => Array.isArray(val));
-        if (foundArray) return foundArray as Type;
+      if (rawData.app_settings && Array.isArray(rawData.app_settings)) return rawData.app_settings as Type;
+      if (rawData.artists && Array.isArray(rawData.artists)) return rawData.artists as Type;
+      if (rawData.stages && Array.isArray(rawData.stages)) return rawData.stages as Type;
+
+      const values = Object.values(rawData);
+      const foundArray = values.find(val => Array.isArray(val));
+      if (foundArray) return foundArray as Type;
     }
 
     return rawData as Type;
@@ -36,14 +36,14 @@ export function useRefreshedData<Type>(endpoint: string, cacheKey: string) {
       if (response.ok) {
         const json = await response.json();
         const cleanData = normalizeData(json);
-        
+
         await AsyncStorage.setItem(cacheKey, JSON.stringify(cleanData));
         setData(cleanData);
       } else {
-          console.warn(`ERROR: ${response.status} @ ${endpoint}`);
+        console.warn(`ERROR: ${response.status} @ ${endpoint}`);
       }
     } catch (error) {
-      console.error("Network ERROR: ", error);
+      console.error("ERROR: ", error);
     }
   };
 
@@ -53,7 +53,7 @@ export function useRefreshedData<Type>(endpoint: string, cacheKey: string) {
       try {
         const cached = await AsyncStorage.getItem(cacheKey);
         if (cached) setData(normalizeData(JSON.parse(cached)));
-      } catch (e) { console.warn(e); } 
+      } catch (e) { console.warn(e); }
       finally { setLoading(false); }
 
       await fetchData();
@@ -62,7 +62,7 @@ export function useRefreshedData<Type>(endpoint: string, cacheKey: string) {
     init();
   }, [endpoint, cacheKey]);
 
-  // --- 4. PULL TO REFRESH ---
+  // pull to refresh
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await fetchData();

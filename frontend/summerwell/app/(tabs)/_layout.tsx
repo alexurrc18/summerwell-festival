@@ -12,10 +12,8 @@ import LocationIcon from "@/assets/icons/icon_location.svg";
 import WalletIcon from "@/assets/icons/icon_wallet.svg";
 import MoreIcon from "@/assets/icons/icon_dots-horizontal.svg";
 import CalendarIcon from "@/assets/icons/icon_calendar.svg";
-import FilterIcon from "@/assets/icons/icon_filter.svg";
 
 import Header from "@/components/ui/header";
-import Button from "@/components/ui/button";
 
 export default function TabLayout() {
   const theme = Colors[useColorScheme() ?? "light"];

@@ -38,6 +38,7 @@ export const Colors = {
     primary: Palette.blue,
     secondary: Palette.orange,
 
+    timeIndicator: Palette.purple,
 
     button1: Palette.blue,
     buttonAuth: Palette.blue,
@@ -65,6 +66,8 @@ export const Colors = {
 
     primary: Palette.blue,
     secondary: Palette.orange,
+
+    timeIndicator: Palette.purple,
 
     button1: Palette.orange,
     buttonAuth: Palette.blue,

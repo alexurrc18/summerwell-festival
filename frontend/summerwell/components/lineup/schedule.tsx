@@ -1,11 +1,12 @@
-import { View, Text, ScrollView, NativeSyntheticEvent, NativeScrollEvent, Pressable, RefreshControl } from "react-native";
+import { View, Text, ScrollView, NativeSyntheticEvent, NativeScrollEvent, Pressable, RefreshControl, Animated } from "react-native";
 import { Typography } from "@/constants/typography";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Colors, Palette } from "@/constants/theme";
 import Artist from "@/components/ui/artist";
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Button from "../ui/button";
-import { useRefreshedData } from "@/hooks/refreshData";
+import { useApiData } from "@/hooks/apiData";
+import TimeIndicator from "@/components/ui/time-indicator";
 
 type ArtistData = {
   id: number;
@@ -28,6 +29,7 @@ const hour_width = 250;
 const row_height = 120;
 const start_hour = 18;
 const header_height = 40;
+const last_col_width = 60;
 
 const timeLabels = ["18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "00:00", "01:00"];
 
@@ -48,20 +50,47 @@ const getPosition = (start: string, end: string) => {
   const left = (startTime - start_hour) * hour_width + 16;
   const width = (endTime - startTime) * hour_width + 1;
 
-  return { left, width: Math.max(width, 50) };
+  return { left, width };
 };
+
+const getStartPosition = (start: string) => {
+  const startTime = getTime(start);
+
+  const left = (startTime - start_hour) * hour_width + 16;
+
+  return { left };
+};
+
 
 export default function Schedule() {
   const theme = Colors[useColorScheme() ?? "light"];
 
-  const headerScrollRef = useRef<ScrollView>(null);
+  const scrollX = useRef(new Animated.Value(0)).current;
   const bodyScrollRef = useRef<ScrollView>(null);
 
   const [activeTab, setActiveTab] = useState<"Friday" | "Saturday" | "Sunday">("Friday");
   const [filteredArtists, setFilteredArtists] = useState<ArtistData[]>([]);
-  const { data: allArtists, onRefresh: refreshArtists, refreshing: refArtists } = useRefreshedData<ArtistData[]>('/artists', 'cache_artists');
-  const { data: stagesData, onRefresh: refreshStages, refreshing: refStages } = useRefreshedData<StageData[]>('/stages', 'cache_stages');
+  const { data: allArtists, onRefresh: refreshArtists, refreshing: refArtists } = useApiData<ArtistData[]>('/artists', 'cache_artists');
+  const { data: stagesData, onRefresh: refreshStages, refreshing: refStages } = useApiData<StageData[]>('/stages', 'cache_stages');
   const stages = Array.isArray(stagesData) ? stagesData : [];
+
+  const [currentTime, setCurrentTime] = useState<number>(0);
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      setCurrentTime(getStartPosition(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`).left);
+    }
+
+    updateTime();
+    const interval = setInterval(() => {
+      updateTime();
+
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const list = Array.isArray(allArtists) ? allArtists : [];
@@ -77,14 +106,8 @@ export default function Schedule() {
     await Promise.all([refreshArtists(), refreshStages()]);
   }, [refreshArtists, refreshStages]);
 
-  const gridWidth = timeLabels.length * hour_width;
+  const gridWidth = (timeLabels.length - 1) * hour_width + last_col_width + 16;
 
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const x = event.nativeEvent.contentOffset.x;
-    if (headerScrollRef.current) {
-      headerScrollRef.current.scrollTo({ x, animated: false });
-    }
-  };
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -104,34 +127,63 @@ export default function Schedule() {
           style={{ flex: 1 }}
           contentContainerStyle={{ flexGrow: 1 }}
           stickyHeaderIndices={[0]}
-          refreshControl={ <RefreshControl refreshing={refArtists || refStages} onRefresh={handleRefresh} tintColor={theme.textDesc} />}>
+          overScrollMode="never"
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={refArtists || refStages} onRefresh={handleRefresh} tintColor={theme.textDesc} />}>
+
 
           {/* TIME LABELS HEADER */}
-          <View style={{ backgroundColor: theme.background, zIndex: 100 }}>
-            <ScrollView horizontal ref={headerScrollRef} scrollEnabled={false} showsHorizontalScrollIndicator={false}>
-              <View style={{ width: gridWidth, height: header_height, flexDirection: "row", marginLeft: 16 }}>
-                {timeLabels.map((label) => (
-                  <View key={label} style={{ position: "relative", width: hour_width }}>
-                    <Text style={[Typography.Body1, { color: theme.textDark, marginTop: 10 }]}>{label}</Text>
-                  </View>
-                ))}
-                <View style={{ width: "110%", height: 2, backgroundColor: theme.devider1, position: "absolute", bottom: 0, left: -16 }} />
-              </View>
-            </ScrollView>
-          </View>
+          <View style={{ backgroundColor: theme.background, zIndex: 100, width: '100%', overflow: 'hidden' }}>
+            <View style={{ width: '100%' }}>
+              <Animated.View style={{
+                width: gridWidth, height: header_height, flexDirection: "row", marginLeft: 16,
+                transform: [{
+                  translateX: scrollX.interpolate({
+                    inputRange: [0, gridWidth],
+                    outputRange: [0, -gridWidth],
+                    extrapolate: 'clamp'
+                  })
+                }]
+              }}>
+                {timeLabels.map((label, index) => {
+                  const isLastItem = index === timeLabels.length - 1;
+                  const width = isLastItem ? last_col_width : hour_width;
 
+                  return (
+                    <View key={label} style={{ position: "relative", width: width }}>
+                      <Text style={[Typography.Body1, { color: theme.textDark, marginTop: 10 }]}>{label}</Text>
+                    </View>
+                  );
+                })}
+                <View style={{ width: "100%", height: 2, backgroundColor: theme.devider1, position: "absolute", bottom: 0, left: -16 }} />
+
+              </Animated.View>
+            </View>
+          </View>
 
           <View style={{ minHeight: '100%', position: 'relative' }}>
 
-            <ScrollView horizontal ref={bodyScrollRef} onScroll={handleScroll} scrollEventThrottle={16} contentContainerStyle={{ flexGrow: 1 }}>
+            <Animated.ScrollView horizontal ref={bodyScrollRef}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: true }
+              )}
+              scrollEventThrottle={1}
+              contentContainerStyle={{ flexGrow: 1 }}
+              overScrollMode="never"
+              bounces={false}>
               <View style={{ width: gridWidth, minHeight: '100%' }}>
 
                 {/* GRID LINES */}
                 <View style={{ position: 'absolute', top: 0, left: 16, flexDirection: 'row', height: '100%' }}>
                   {timeLabels.map((label, index) => {
                     const isLastItem = index === timeLabels.length - 1;
+                    const width = isLastItem ? last_col_width : hour_width;
+
                     return (
-                      <View key={label} style={{ width: hour_width, height: '100%' }}>
+                      <View key={label} style={{ width: width, height: '100%' }}>
                         <View style={{ height: "100%", width: 2, backgroundColor: theme.devider1, position: "absolute", left: 16 }} />
                         {!isLastItem && (
                           <View style={{ height: "100%", width: 2, backgroundColor: theme.devider1_50, position: "absolute", left: hour_width / 2 + 16 }} />
@@ -160,20 +212,40 @@ export default function Schedule() {
                   );
                 })}
               </View>
-            </ScrollView>
+            </Animated.ScrollView>
+
+
 
             {/* STAGES COLUMN */}
-            <View pointerEvents="none" style={{ position: "absolute", top: 10, left: 16, bottom: 0, width: '100%' }}>
+            <View pointerEvents="none" style={{ position: "absolute", top: 10, left: 16, bottom: 0, width: '100%', zIndex: 10 }}>
               {stages.map((stage, index) => (
                 <View key={stage.name} style={{ position: 'absolute', top: index * row_height }}>
-                  <Text style={[Typography.Header3, { color: Palette[stage.color as keyof typeof Palette] || Palette.white, backgroundColor: theme.background }]}>
+                  <Text style={[Typography.Header3, { color: Palette[stage.color as keyof typeof Palette] || Palette.white, backgroundColor: theme.background}]}>
                     {stage.name}
                   </Text>
                 </View>
               ))}
             </View>
+      
+            
 
           </View>
+
+          {/* TIME INDICATOR */}
+          {currentTime > 5 &&
+              <Animated.View pointerEvents="none" style={{ position: 'absolute', top: 10, bottom: 0, left: 0, width: gridWidth, zIndex: 9999,
+                  transform: [{
+                    translateX: scrollX.interpolate({
+                      inputRange: [0, gridWidth],
+                      outputRange: [0, -gridWidth],
+                      extrapolate: 'clamp'
+                    })
+                  }]
+                }}>
+                  <TimeIndicator position={currentTime + 16}/>
+              </Animated.View>
+            }
+
         </ScrollView>
 
         <View style={{ position: 'absolute', bottom: 16, right: 16 }}>

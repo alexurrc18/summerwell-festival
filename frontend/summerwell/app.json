@@ -15,9 +15,6 @@
       "infoPlist": {
         "UIDesignRequiresCompatibility": true,
         "ITSAppUsesNonExemptEncryption": false
-      },
-      "config": {
-        "googleMapsApiKey": "AIzaSyBxyChMdZFFcdhGDesVXyz-wtp-YNqq_Ag"
       }
     },
     "android": {

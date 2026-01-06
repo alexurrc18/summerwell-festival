@@ -5,7 +5,7 @@ import { Colors, Palette } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import Artist from "@/components/ui/artist";
 import React, { useState, useEffect } from 'react';
-import { useRefreshedData } from "@/hooks/refreshData";
+import { useApiData } from "@/hooks/apiData";
 
 type ArtistData = {
   id: string;
@@ -21,7 +21,7 @@ export default function Artists() {
   const theme = Colors[useColorScheme() ?? "light"];
   const [activeTab, setActiveTab] = useState<"All" | "Friday" | "Saturday" | "Sunday">("All");
 
-  const { data: artists, loading, refreshing, onRefresh } = useRefreshedData<ArtistData[]>('/artists', 'cache_artists');
+  const { data: artists, loading, refreshing, onRefresh } = useApiData<ArtistData[]>('/artists', 'cache_artists');
   
   const [filteredArtists, setFilteredArtists] = useState<ArtistData[]>([]);
 
