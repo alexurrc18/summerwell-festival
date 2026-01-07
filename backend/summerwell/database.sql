@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 04, 2026 at 06:34 PM
+-- Generation Time: Jan 07, 2026 at 09:13 PM
 -- Server version: 10.11.13-MariaDB-0ubuntu0.24.04.1
 -- PHP Version: 8.4.14
 
@@ -20,6 +20,26 @@ SET time_zone = "+00:00";
 --
 -- Database: `summerwell`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `app_settings`
+--
+
+CREATE TABLE `app_settings` (
+  `id` int(11) NOT NULL,
+  `option_name` varchar(255) NOT NULL,
+  `value` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `app_settings`
+--
+
+INSERT INTO `app_settings` (`id`, `option_name`, `value`) VALUES
+(1, 'edition', '2026'),
+(2, 'dateStart', '2026-08-07T17:00:00');
 
 -- --------------------------------------------------------
 
@@ -68,6 +88,59 @@ INSERT INTO `artists` (`artist_id`, `year`, `name`, `image`, `stage_id`, `date`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `map`
+--
+
+CREATE TABLE `map` (
+  `id` bigint(20) NOT NULL,
+  `edition` int(4) NOT NULL DEFAULT 2026,
+  `category` varchar(255) NOT NULL,
+  `id_category` varchar(255) DEFAULT NULL,
+  `lon` float NOT NULL,
+  `lat` float NOT NULL,
+  `published` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `map`
+--
+
+INSERT INTO `map` (`id`, `edition`, `category`, `id_category`, `lon`, `lat`, `published`) VALUES
+(32, 2026, 'bar', NULL, 25.9414, 44.5647, 1),
+(33, 2026, 'bar', NULL, 25.9413, 44.5654, 1),
+(34, 2026, 'bar', NULL, 25.9414, 44.5668, 1),
+(35, 2026, 'bar', NULL, 25.9408, 44.5674, 1),
+(36, 2026, 'bar', NULL, 25.9413, 44.5676, 1),
+(37, 2026, 'bar', NULL, 25.9408, 44.568, 1),
+(38, 2026, 'bar', NULL, 25.9404, 44.5675, 1),
+(39, 2026, 'bar', NULL, 25.9399, 44.5674, 1),
+(40, 2026, 'bar', NULL, 25.9403, 44.5689, 1),
+(41, 2026, 'food', NULL, 25.9374, 44.5678, 1),
+(42, 2026, 'toilets', NULL, 25.937, 44.568, 1),
+(43, 2026, 'bar', NULL, 25.9377, 44.5679, 1),
+(44, 2026, 'bar', NULL, 25.9377, 44.5683, 1),
+(45, 2026, 'top-up', NULL, 25.9377, 44.5681, 1),
+(46, 2026, 'bar', NULL, 25.9377, 44.5672, 1),
+(47, 2026, 'stage', '2', 25.9375, 44.5666, 1),
+(48, 2026, 'bar', NULL, 25.9379, 44.566, 1),
+(49, 2026, 'bar', NULL, 25.939, 44.5653, 1),
+(50, 2026, 'top-up', NULL, 25.9389, 44.5654, 1),
+(51, 2026, 'food', NULL, 25.9391, 44.5654, 1),
+(52, 2026, 'bar', NULL, 25.9392, 44.5654, 1),
+(53, 2026, 'toilets', NULL, 25.9399, 44.5651, 1),
+(54, 2026, 'bar', NULL, 25.94, 44.5653, 1),
+(55, 2026, 'top-up', NULL, 25.9407, 44.5646, 1),
+(56, 2026, 'first-aid', NULL, 25.941, 44.5652, 1),
+(57, 2026, 'toilets', NULL, 25.9414, 44.5644, 1),
+(58, 2026, 'food', NULL, 25.9417, 44.5646, 1),
+(59, 2026, 'top-up', NULL, 25.9412, 44.5678, 1),
+(60, 2026, 'toilets', NULL, 25.941, 44.5681, 1),
+(61, 2026, 'stage', '1', 25.9402, 44.5667, 1),
+(62, 2026, 'food', NULL, 25.9405, 44.569, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `stages`
 --
 
@@ -82,8 +155,8 @@ CREATE TABLE `stages` (
 --
 
 INSERT INTO `stages` (`stage_id`, `name`, `color`) VALUES
-(1, 'ORANGE MAIN STAGE', 'orange'),
-(2, 'SUNSET STAGE by ING x VISA', 'yellow');
+(1, 'Orange Main Stage', 'orange'),
+(2, 'Sunset Stage by ING x VISA', 'yellow');
 
 -- --------------------------------------------------------
 
@@ -131,12 +204,24 @@ INSERT INTO `ticket_types` (`ticket_id`, `name`, `type`, `year`, `price`, `stock
 --
 
 --
+-- Indexes for table `app_settings`
+--
+ALTER TABLE `app_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `artists`
 --
 ALTER TABLE `artists`
   ADD PRIMARY KEY (`artist_id`),
   ADD UNIQUE KEY `artist_id` (`artist_id`),
   ADD KEY `FK5wy74y1w5u0cayxtd5kcvgfvg` (`stage_id`);
+
+--
+-- Indexes for table `map`
+--
+ALTER TABLE `map`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `stages`
@@ -163,10 +248,22 @@ ALTER TABLE `ticket_types`
 --
 
 --
+-- AUTO_INCREMENT for table `app_settings`
+--
+ALTER TABLE `app_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `artists`
 --
 ALTER TABLE `artists`
   MODIFY `artist_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `map`
+--
+ALTER TABLE `map`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `tickets`

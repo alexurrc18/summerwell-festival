@@ -19,6 +19,7 @@ export function useApiData<Type>(endpoint: string, cacheKey: string) {
       if (rawData.app_settings && Array.isArray(rawData.app_settings)) return rawData.app_settings as Type;
       if (rawData.artists && Array.isArray(rawData.artists)) return rawData.artists as Type;
       if (rawData.stages && Array.isArray(rawData.stages)) return rawData.stages as Type;
+      if (rawData.map && Array.isArray(rawData.map)) return rawData.map as Type;
 
       const values = Object.values(rawData);
       const foundArray = values.find(val => Array.isArray(val));
