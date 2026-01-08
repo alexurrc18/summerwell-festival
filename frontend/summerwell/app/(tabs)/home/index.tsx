@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { View, Image, Text, ScrollView, AppState } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { View, Image, Text, ScrollView, AppState, Animated } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -11,6 +11,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import Button from "@/components/ui/button";
 import Artist from "@/components/ui/artist";
 import BellIcon from "@/assets/icons/icon_bell.svg";
+import Header from "@/components/ui/header";
 
 import { useApiData } from "@/hooks/apiData";
 
@@ -118,17 +119,48 @@ export default function HomeScreen() {
     }, [player])
   );
 
+  const isHeaderVisible = useRef(false);
+
+  const headerAnim = useRef(new Animated.Value(0)).current;
+
+  const headerBackgroundColor = headerAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["transparent", theme.subheader],
+  });
+
+  const handleScroll = (event: any) => {
+    const scrollY = event.nativeEvent.contentOffset.y;
+    const threshold = 250;
+
+    if(scrollY > threshold && !isHeaderVisible.current) {
+      isHeaderVisible.current = true;
+      Animated.timing(headerAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    } else if (scrollY <= threshold && isHeaderVisible.current) {
+      isHeaderVisible.current = false;
+      Animated.timing(headerAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    }
+  }
+  
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
 
-      <View style={{ position: "absolute", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", top: insets.top, paddingLeft: 16, paddingRight: 16, zIndex: 10000 }}>
+      <Animated.View style={{ backgroundColor: headerBackgroundColor, position: "absolute", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", paddingTop: insets.top, paddingLeft: 16, paddingRight: 16, paddingBottom: 5, zIndex: 10000 }}>
         <Image source={require("@/assets/images/logo.png")} style={{ left: 0, width: 40, height: 40, resizeMode: "contain" }} />
         <View style={{ right: 0 }} >
-          <Button buttonStyle="icon" icon={<BellIcon width={30} height={30} fill={theme.textLight} />} />
+          <Button buttonStyle="icon" icon={<BellIcon width={30} height={30} fill={Palette.white} onPress={() => router.push("/home/notifications")} />} />
         </View>
-      </View>
+      </Animated.View>
 
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }} onScroll={handleScroll} scrollEventThrottle={16}>
 
         {/* Hero */}
         <View style={{ height: 375, width: "100%", marginBottom: 16 }}>
@@ -165,6 +197,7 @@ export default function HomeScreen() {
             <Artist name="Fontaines D.C." image="https://i.scdn.co/image/ab67616100005174c4b9cd69cf77ce41487dd69a" />
 
           </ScrollView>
+
         </View>
 
       </ScrollView>

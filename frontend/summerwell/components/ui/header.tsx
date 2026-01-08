@@ -5,7 +5,7 @@ import { Palette } from "@/constants/theme";
 import { Typography } from "@/constants/typography";
 
 type Props = {
-    title: string;
+    title?: string;
     left?: React.ReactNode;
     right?: React.ReactNode;
     backgroundColor?: string;

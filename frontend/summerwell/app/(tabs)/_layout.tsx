@@ -45,7 +45,21 @@ export default function TabLayout() {
 
       {/* HOME */}
       <Tabs.Screen
-        name="index"
+        name="home"
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            const isFocused = navigation.isFocused();
+            e.preventDefault();
+            if (!isFocused) {
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'home' }],
+                })
+              );
+            }
+          },
+        })}
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
@@ -55,19 +69,19 @@ export default function TabLayout() {
       />
 
       {/* MAP */}
-<Tabs.Screen
-  name="map"
-  options={{
-    title: "Map",
-    tabBarIcon: ({ color }) => (
-      <LocationIcon width={30} height={30} fill={color} />
-    ),
-    headerShown: true,
-    header: () => (
-      <Header title="Map" backgroundColor={theme.header} />
-    ),
-  }}
-/>
+      <Tabs.Screen
+        name="map"
+        options={{
+          title: "Map",
+          tabBarIcon: ({ color }) => (
+            <LocationIcon width={30} height={30} fill={color} />
+          ),
+          headerShown: true,
+          header: () => (
+            <Header title="Map" backgroundColor={theme.header} />
+          ),
+        }}
+      />
 
       {/* LINEUP */}
       <Tabs.Screen
@@ -85,13 +99,16 @@ export default function TabLayout() {
         name="wallet"
         listeners={({ navigation }) => ({
           tabPress: (e) => {
+            const isFocused = navigation.isFocused();
             e.preventDefault();
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: 'wallet' }],
-              })
-            );
+            if (!isFocused) {
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'wallet' }],
+                })
+              );
+            }
           },
         })}
         options={{
