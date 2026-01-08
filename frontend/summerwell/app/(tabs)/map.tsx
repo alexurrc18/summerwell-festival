@@ -26,6 +26,7 @@ import TopUpPin from '@/assets/map_pins/pin_top_up.svg';
 import ExperiencePin from '@/assets/map_pins/pin_experience.svg';
 import { useMapStyle } from "@/constants/map-style";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import WristbandPin from "@/assets/map_pins/pin_wristband.svg";
 
 
 
@@ -114,6 +115,7 @@ export default function MapScreen() {
                   {pin.category === "top-up" && <TopUpPin width={40} height={40} />}
                   {pin.category === "experience" && <ExperiencePin width={40} height={40} />}
                   {pin.category === "bus" && <BusPin width={40} height={40} />}
+                  {pin.category === "access" && <WristbandPin width={40} height={40} />}
                 </Marker>
               );
               break;
@@ -154,6 +156,18 @@ export default function MapScreen() {
                   {pin.category === "toilets" && <ToiletsPin width={40} height={40} />}
                 </Marker>);
               break;
+            case "Access":
+              return (
+                <Marker key={pin.id} coordinate={{ latitude: pin.lat, longitude: pin.lon }}>
+                  {pin.category === "access" && <WristbandPin width={40} height={40} />}
+                </Marker>);
+              break;
+            case "Bus":
+              return (
+                <Marker key={pin.id} coordinate={{ latitude: pin.lat, longitude: pin.lon }}>
+                  {pin.category === "bus" && <BusPin width={40} height={40} />}
+                </Marker>);
+              break;
             default:
               return (
                 <Marker key={pin.id} coordinate={{ latitude: pin.lat, longitude: pin.lon }}>
@@ -165,6 +179,7 @@ export default function MapScreen() {
                   {pin.category === "top-up" && <TopUpPin width={40} height={40} />}
                   {pin.category === "experience" && <ExperiencePin width={40} height={40} />}
                   {pin.category === "bus" && <BusPin width={40} height={40} />}
+                  {pin.category === "access" && <WristbandPin width={40} height={40} />}
                 </Marker>
               );
           }

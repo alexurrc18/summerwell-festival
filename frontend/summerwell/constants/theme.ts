@@ -53,11 +53,11 @@ export const Colors = {
     devider2: Palette.darkGray,
     devider3: DarkTheme,
 
-    mapGrass: "#b7e9ac",
-    mapRoad: "#bec5d8",
-    mapBuilding: "#f2ede5",
+    mapGrass: "#71b65d",
+    mapRoad: "#4f7f41",
+    mapBuilding: "#4f7f41",
     mapWater: "#98dcfe",
-    mapManMade: "#f4f0ef",
+    mapManMade: "#4f7f41",
 
   },
   dark: {
@@ -92,7 +92,7 @@ export const Colors = {
     mapRoad: "#1f763b",
     mapBuilding: "#1e4c25",
     mapWater: "#19164f",
-    mapManMade: "#1e4c25",
+    mapManMade: "#0d610d",
 
   },
 } as const;
