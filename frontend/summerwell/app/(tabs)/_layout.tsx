@@ -1,4 +1,4 @@
-import { Tabs, useRouter } from "expo-router";
+import { Tabs } from "expo-router";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CommonActions } from '@react-navigation/native';
@@ -6,7 +6,6 @@ import { CommonActions } from '@react-navigation/native';
 import { HapticTab } from "@/components/haptic-tab";
 import { Colors, Palette } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { useAuth } from "@/context/AuthContext";
 
 import HomeIcon from "@/assets/icons/icon_home.svg";
 import LocationIcon from "@/assets/icons/icon_location.svg";
@@ -16,11 +15,10 @@ import CalendarIcon from "@/assets/icons/icon_calendar.svg";
 
 import Header from "@/components/ui/header";
 
+
 export default function TabLayout() {
   const theme = Colors[useColorScheme() ?? "light"];
   const insets = useSafeAreaInsets();
-  const { token } = useAuth();
-  const router = useRouter();
 
   return (
     <Tabs
@@ -102,12 +100,6 @@ export default function TabLayout() {
         name="wallet"
         listeners={({ navigation }) => ({
           tabPress: (e) => {
-            if (!token) {
-              e.preventDefault();
-              router.push('/(auth)');
-              return;
-            }
-
             const isFocused = navigation.isFocused();
             e.preventDefault();
             if (!isFocused) {

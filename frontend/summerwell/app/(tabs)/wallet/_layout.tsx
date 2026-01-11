@@ -11,11 +11,13 @@ import CartIcon from "@/assets/icons/icon_cart.svg";
 
 import Button from "@/components/ui/button";
 import Header from "@/components/ui/header";
+import { useAuth } from "@/context/AuthContext";
 
 export default function WalletLayout() {
   const colorScheme = useColorScheme();
   const router = useRouter();
   const theme = Colors[colorScheme ?? "light"];
+  const { token } = useAuth();
 
   return (
     <Stack>
@@ -41,8 +43,13 @@ export default function WalletLayout() {
               }
               right={
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                  <Button  buttonStyle="icon" icon={<CartIcon width={30} height={30} fill={Palette.white} />} onPress={() => router.push("/(tabs)/wallet/cart")} />
-                  <Text style={[Typography.Header3, { color: Palette.white }]}>2</Text>
+                  <Button  buttonStyle="icon" icon={<CartIcon width={30} height={30} fill={Palette.white} />} onPress={() => {
+                    if(token) 
+                      router.push("/(tabs)/wallet/cart");
+                    else
+                      router.push("/(auth)");
+                  }} />
+                  <Text style={[Typography.Header3, { color: Palette.white }]}> </Text>
                 </View>
               }
             />

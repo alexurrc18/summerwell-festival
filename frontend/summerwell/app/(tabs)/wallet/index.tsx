@@ -9,11 +9,13 @@ import { Stack } from "expo-router";
 import { useRouter } from "expo-router";
 import Ticket from "@/components/ui/ticket";
 import Button from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 export default function TicketsScreen() {
   const theme = Colors[useColorScheme() ?? "light"];
   const [activeTab, setActiveTab] = useState<"Active tickets" | "Past tickets">("Active tickets");
   const router = useRouter();
+  const { token } = useAuth();
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
@@ -32,7 +34,9 @@ export default function TicketsScreen() {
       {/* ADD WRISTBAND */}
             <View style={{ backgroundColor: theme.devider1_50, height: 32, justifyContent: "center", alignItems: "center", flexDirection: "row", paddingHorizontal: 60 }}>
                 <Text style={[Typography.Regular, { color: theme.textDark }]}>Got a physical ticket? </Text>
-              <Pressable onPress={() => router.push('/(tabs)/wallet/wristband')}>
+              <Pressable onPress={() => { if(token) 
+                router.push('/(tabs)/wallet/wristband') 
+                else router.push('/(auth)') }}>
                 <Text style={[Typography.Body1, { color: theme.selected }]}>Add a wristband</Text>
               </Pressable>
             </View>

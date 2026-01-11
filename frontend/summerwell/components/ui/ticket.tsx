@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { Image } from "expo-image";
 import React, { useState } from "react";
 
@@ -25,10 +25,11 @@ type Props = {
     wristbandID?: string;
     balance?: string;
     inCart?: boolean;
+    onPress?: () => void;
 };
 
 
-export default function Ticket({ type, name = "Not set", description, color = Palette.orange, price = "Unknown", holder = "Not claimed", ticketID = "Not claimed", wristbandID = "Not claimed", balance = "0.00", inCart = false}: Props) {
+export default function Ticket({ type, name = "Not set", description, color = Palette.orange, price = "Unknown", holder = "Not claimed", ticketID = "Not claimed", wristbandID = "Not claimed", balance = "0.00", inCart = false, onPress = () => { } }: Props) {
     const theme = Colors[useColorScheme() ?? "light"];
     const [expanded, setExpanded] = useState(false);
 
@@ -61,10 +62,10 @@ export default function Ticket({ type, name = "Not set", description, color = Pa
                 </View>
 
                 {/* BUTTON */}
-                <View style={{ backgroundColor: Palette.orange, width: 50, justifyContent: "center", alignItems: "center", borderTopRightRadius: 15, borderBottomRightRadius: 15 }}>
+                <Pressable style={{ backgroundColor: Palette.orange, width: 50, justifyContent: "center", alignItems: "center", borderTopRightRadius: 15, borderBottomRightRadius: 15 }} onPress={onPress}>
 
                     <Button buttonStyle="icon" icon={inCart === false ? <PlusIcon fill={Palette.white} width={12} height={12} /> : <TrashIcon fill={Palette.white} width={20} height={20} />} />
-                </View>
+                </Pressable>
             </View>
         )
     }

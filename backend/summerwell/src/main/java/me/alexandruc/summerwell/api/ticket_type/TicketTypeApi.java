@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/api/v1/public/ticket-types")
+@RequestMapping("/api/v1/public/ticket-type")
 @RequiredArgsConstructor
 public class TicketTypeApi {
     
@@ -26,7 +26,7 @@ public class TicketTypeApi {
 
     private Map<String, Object> ticketTypesResponse(List<TicketTypeData> tickets) {
         return new HashMap<>() {{
-            put("ticket_types", tickets);
+            put("ticket_type", tickets);
         }};
     }
 

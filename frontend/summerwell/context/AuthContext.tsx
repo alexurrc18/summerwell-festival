@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-
+    
 
     // LOGOUT FUNCTION
     const logout = async () => {

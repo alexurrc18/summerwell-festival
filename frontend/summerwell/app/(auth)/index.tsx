@@ -14,6 +14,9 @@ import Button from "@/components/ui/button";
 import FacebookIcon from "@/assets/icons/icon_facebook.svg";
 import GoogleIcon from "@/assets/icons/icon_google.svg";
 import { useRouter } from "expo-router";
+import Header from "@/components/ui/header";
+
+import LeftChevronIcon from "@/assets/icons/icon_chevron-left.svg";
 
 
 
@@ -26,7 +29,7 @@ export default function AuthScreen() {
 
   const player = useVideoPlayer(require("@/assets/videos/bg_video.mp4"), (p) => {
     p.loop = true;
-    p.muted = false;
+    p.muted = true;
     p.play();
   });
 
@@ -43,6 +46,9 @@ export default function AuthScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.background }}>
+      <View style={{ height: insets.top, position: "absolute", top: 0, left: 0, right: 0, zIndex: 10 }}>
+      <Header backgroundColor="transparent" left={<LeftChevronIcon width={32} height={32} fill={Palette.white} onPress={() => router.back()} />} />
+      </View>
 
       <View style={{ height: "100%", width: "100%" }}>
         <VideoView
