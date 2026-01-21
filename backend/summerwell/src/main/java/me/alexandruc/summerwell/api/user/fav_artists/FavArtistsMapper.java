@@ -12,6 +12,5 @@ public class FavArtistsMapper {
         data.setArtist(entity.getArtist());
         return data;
     }
-
     
 }

@@ -124,6 +124,20 @@ export default function TabLayout() {
       {/* MORE */}
       <Tabs.Screen
         name="more"
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            const isFocused = navigation.isFocused();
+            e.preventDefault();
+            if (!isFocused) {
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'more' }],
+                })
+              );
+            }
+          },
+        })}
         options={{
           title: "More",
           tabBarIcon: ({ color }) => (

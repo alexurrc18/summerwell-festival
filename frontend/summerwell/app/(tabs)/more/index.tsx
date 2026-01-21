@@ -1,0 +1,43 @@
+import { View, Text, Pressable } from "react-native";
+import { Typography } from "@/constants/typography";
+import { Palette } from "@/constants/theme";
+import { Colors } from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useAuth } from "@/context/AuthContext";
+import { router } from "expo-router";
+import { push } from "expo-router/build/global-state/routing";
+
+export default function MoreScreen() {
+  const theme = Colors[useColorScheme() ?? "light"];
+  const insets = useSafeAreaInsets();
+
+  const auth = useAuth();
+
+
+
+  return (
+    <View style={{ flex: 1, backgroundColor: theme.background, paddingTop: insets.top+20, padding: 16 }}>
+
+      <Pressable style={{ paddingBottom: 15, marginBottom: 15, borderBottomWidth: 2, borderBottomColor: theme.devider1 }} onPress={() => {
+        if(auth.isAuthenticated(true)) router.push('/more/profile')
+        }}>
+        <Text style={[Typography.Header2, { color: theme.textDark }]}>My profile</Text>
+      </Pressable>
+
+      <Pressable style={{ paddingBottom: 15, marginBottom: 15, borderBottomWidth: 2, borderBottomColor: theme.devider1 }}>
+        <Text style={[Typography.Header2, { color: theme.textDark }]}>Partners</Text>
+      </Pressable>
+
+      <Pressable style={{ paddingBottom: 15, marginBottom: 15, borderBottomWidth: 2, borderBottomColor: theme.devider1 }}>
+        <Text style={[Typography.Header2, { color: theme.textDark }]}>Summer Well x Bucharest</Text>
+      </Pressable>
+
+    { auth.token && (
+      <Pressable style={{ paddingBottom: 15, marginBottom: 15, borderBottomWidth: 0, borderBottomColor: theme.devider1 }} onPress={auth.logout}>
+        <Text style={[Typography.Header2, { color: theme.textDark }]}>Log Out</Text>
+      </Pressable>)}
+    
+    </View>
+  );
+}

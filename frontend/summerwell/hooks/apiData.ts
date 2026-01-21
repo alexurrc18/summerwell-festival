@@ -42,9 +42,10 @@ export function useApiData<Type>( endpoint: string, cacheKey: string, options: A
 
         await AsyncStorage.setItem(cacheKey, JSON.stringify(cleanData));
         setData(cleanData);
-      } else {
-        console.warn(`API Error: ${response.status}`);
-      }
+      } else if(response.status === 401) {
+          await AsyncStorage.removeItem(cacheKey);
+          setData(null);
+      } else console.warn(`API Error: ${response.status}`);
     } catch (error) {
       console.warn("[WARNING] Servers are unreachable. Using cached data.", error);
     }

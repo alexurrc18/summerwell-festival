@@ -34,7 +34,7 @@ export default function PinScreen() {
                         </View>
                     </View>
 
-                    <View style={{ marginBottom: 16 }}>
+                    <View style={{ marginBottom: 0 }}>
                         <Button buttonStyle="primary" title="Verify" onPress={async () => {
                             const response = await auth.verifyPin(email, pin);
                             if(response) {

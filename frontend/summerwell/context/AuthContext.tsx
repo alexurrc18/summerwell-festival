@@ -1,12 +1,11 @@
-import React, { createContext, useState, useEffect, useContext, use } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '@/constants/config';
+import React, { createContext, useState, useEffect, useContext} from 'react';
 import { TOKEN_KEY } from '@/constants/config';
 import * as SecureStore from 'expo-secure-store';
 import { useApiData } from '@/hooks/apiData';
 import { router } from 'expo-router';
-import axios from 'axios';
 import api from '@/services/api';
+import { push } from 'expo-router/build/global-state/routing';
+import { Alert } from 'react-native';
 
 
 
@@ -15,7 +14,11 @@ interface AuthContextType {
     signIn: (email: string) => Promise<boolean>;
     verifyPin: (email: string, pin: string) => Promise<boolean>;
     logout: () => Promise<void>;
-    isAuthenticated: () => boolean;
+    deleteAccount: () => Promise<void>;
+    isAuthenticated: (push?: boolean) => boolean;
+
+    localUserData: any;
+    updateData: (firstName: string, lastName: string, phoneNumber: string, country: string, city: string, address: string) => Promise<void>;
 
     isArtistFavorite: (artistId: number) => boolean;
     toggleFavoriteArtist: (artistId: number) => Promise<void>;
@@ -99,14 +102,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // LOGOUT FUNCTION
     const logout = async () => {
         await SecureStore.deleteItemAsync(TOKEN_KEY);
+        setLocalFavoriteArtists([]);
+        setLocalUserData(null);
         setUserToken(null);
+    }
+
+    // DELETE ACCOUNT
+    const deleteAccount = async () => {
+        Alert.alert(
+            "Delete Account",
+            "Are you sure you want to delete your account? This action cannot be undone.",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            await api.post('/user/me/deleteAccount', {});
+                            await logout();
+                            router.replace('/(tabs)/home');
+                        } catch (error) {
+                            console.error("Failed to delete account:", error);
+                        }
+                    }
+                }
+            ]
+        );
     }
 
 
     // VERIFY IF USER IS AUTHENTICATED
-    const isAuthenticated = () => {
+    function isAuthenticated(push = false) {
         if (!userToken) {
-            router.push('/(auth)');
+            if (push) router.push('/(auth)');
             return false;
         }
         return true;
@@ -118,11 +150,46 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 
     // USER DATA
-    // Favorite artists
-    const { data: favoriteArtists } = useApiData<number[]>('/user/favorites/artists', 'user_favorite_artists', { dependency: userToken });
+    // personal details
+    const { data: userData } = useApiData<number[]>('/user/me', 'user_data', { dependency: userToken });
+    const [ localUserData , setLocalUserData ] = useState<any>(null);
+
+    useEffect(() => {
+        if (!userToken) {
+            setLocalUserData(null);
+            return;
+        }
+
+        if (userData) {
+            setLocalUserData(userData);
+        }
+    }, [userData]);
+
+    const updateData = async (firstName: string, lastName: string, phoneNumber: string, country: string, city: string, address: string) => {
+        if (!isAuthenticated(true)) return;
+        api.post('/user/me/updateDetails', {
+            firstName,
+            lastName,
+            phoneNumber,
+            country,
+            city,
+            address
+        }).then(response => {
+        }).catch(error => {
+            console.error("Failed to update user data:", error);
+        });
+    }
+
+
+    const { data: favoriteArtists } = useApiData<number[]>('/user/favorites/artists', 'favorite_artists', { dependency: userToken });
     const [localFavoriteArtists, setLocalFavoriteArtists] = useState<number[]>([]);
     
     useEffect(() => {
+        if (!userToken) {
+            setLocalFavoriteArtists([]);
+            return;
+        }
+
         if (favoriteArtists) {
             let ids: number[] = [];
             ids = favoriteArtists.map((item: any) => item.artist.id);
@@ -139,7 +206,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 
     const toggleFavoriteArtist = async (artistId: number) => {
-        if (!isAuthenticated()) return;
+        if (!isAuthenticated(true)) return;
 
         let updatedFavorites: number[] = [];
         if (isArtistFavorite(artistId)) {
@@ -163,8 +230,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
  
 
     return (
-        <AuthContext.Provider value={{ token: userToken, signIn, verifyPin, logout, isAuthenticated, isArtistFavorite, toggleFavoriteArtist, localFavoriteArtists }}>
+        <AuthContext.Provider value={{ 
+            token: userToken, signIn, verifyPin, logout, deleteAccount, isAuthenticated, 
+            updateData, localUserData,
+            isArtistFavorite, toggleFavoriteArtist, localFavoriteArtists }}>
+
             {children}
+
         </AuthContext.Provider>
     )
 }

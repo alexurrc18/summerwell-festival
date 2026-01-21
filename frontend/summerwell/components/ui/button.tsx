@@ -11,17 +11,18 @@ type Props = {
     title?: string | undefined;
     icon?: React.ReactNode | undefined;
     onPress?: () => void;
+    disabled?: boolean;
 };
 
-export default function Button({ buttonStyle, title, icon, onPress }: Props) {
+export default function Button({ buttonStyle, title, icon, onPress, disabled = false }: Props) {
     const theme = Colors[useColorScheme() ?? "light"];
 
 
     if (buttonStyle === "auth_3rdparty") {
     return (
         <TouchableOpacity
-            onPress={onPress}
-            style={{backgroundColor: theme.buttonAuth, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 12, paddingHorizontal: 16, gap:13}}activeOpacity={0.85}>
+            onPress={onPress} disabled={disabled}
+            style={{opacity: disabled ? 0.5 : 1, backgroundColor: theme.buttonAuth, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 12, paddingHorizontal: 16, gap:13}}activeOpacity={0.85}>
             {icon ? icon : null}
             <Text style={[Typography.Button, { textAlign: "center", color: theme.buttonTextLight }]}>
                 {title}
@@ -31,8 +32,8 @@ export default function Button({ buttonStyle, title, icon, onPress }: Props) {
     } else if (buttonStyle === "auth_credentials") {
     return (
         <TouchableOpacity
-            onPress={onPress}
-           style={{backgroundColor: theme.buttonAuthCred, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 12, paddingHorizontal: 16, gap:13}}activeOpacity={0.85}>
+            onPress={onPress} disabled={disabled}
+           style={{opacity: disabled ? 0.5 : 1, backgroundColor: theme.buttonAuthCred, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 12, paddingHorizontal: 16, gap:13}}activeOpacity={0.85}>
             <Text style={[Typography.Button, { textAlign: "center", color: theme.buttonTextDark }]}>
                 {title}
             </Text>
@@ -41,16 +42,16 @@ export default function Button({ buttonStyle, title, icon, onPress }: Props) {
     } else if (buttonStyle === "icon") {
     return (
         <TouchableOpacity
-            onPress={onPress}
-           style={{justifyContent: "center", alignItems: "center", borderRadius: 100, padding: 0}} activeOpacity={0.85}>
+            onPress={onPress} disabled={disabled}
+           style={{opacity: disabled ? 0.5 : 1, justifyContent: "center", alignItems: "center", borderRadius: 100, padding: 0}} activeOpacity={0.85}>
             {icon ? icon : null}
         </TouchableOpacity>
     );
     } else if (buttonStyle === "important"){
         return (
         <TouchableOpacity
-           onPress={onPress}
-           style={{backgroundColor: theme.button1, justifyContent: "center", alignItems: "center", flexDirection: "row", paddingVertical: 12, paddingHorizontal: 16, gap:13, height: 60}}activeOpacity={0.85}>
+           onPress={onPress} disabled={disabled}
+           style={{opacity: disabled ? 0.5 : 1, backgroundColor: theme.button1, justifyContent: "center", alignItems: "center", flexDirection: "row", paddingVertical: 12, paddingHorizontal: 16, gap:13, height: 60}}activeOpacity={0.85}>
             <Text style={[Typography.Button, { textAlign: "center", color: theme.buttonTextLight }]}>
                 {title}
             </Text>
@@ -59,8 +60,9 @@ export default function Button({ buttonStyle, title, icon, onPress }: Props) {
     } else if (buttonStyle === "secondary"){
         return (
         <TouchableOpacity
-            onPress={onPress}
-            style={{backgroundColor: Palette.blue, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 10, paddingHorizontal: 30}} activeOpacity={0.85}>
+            onPress={onPress} 
+            disabled={disabled} 
+            style={{opacity: disabled ? 0.5 : 1, backgroundColor: Palette.blue, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 10, paddingHorizontal: 30}} activeOpacity={0.85}>
             <Text style={[Typography.Button, { textAlign: "center", color: theme.buttonTextLight }]}>
                 {title}
             </Text>
@@ -69,8 +71,9 @@ export default function Button({ buttonStyle, title, icon, onPress }: Props) {
     }   else if (buttonStyle === "primary"){
         return (
         <TouchableOpacity
-            onPress={onPress}
-            style={{backgroundColor: Palette.orange, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 8, paddingHorizontal: 30}} activeOpacity={0.85}>
+            onPress={onPress} 
+            disabled={disabled}
+            style={{opacity: disabled ? 0.5 : 1, backgroundColor: Palette.orange, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 8, paddingHorizontal: 30}} activeOpacity={0.85}>
             <Text style={[Typography.Button, { textAlign: "center", color: theme.buttonTextLight }]}>
                 {title}
             </Text>

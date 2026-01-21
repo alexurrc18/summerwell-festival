@@ -40,7 +40,7 @@ export default function LoginScreen() {
                         </Text>
                     </View>
 
-                    <View style={{ marginBottom: 16 }}>
+                    <View style={{ marginBottom: 0 }}>
                         <Button buttonStyle="secondary" title="Continue" onPress={async () => {
                             const success = await signIn(email);
                             if (success) { 

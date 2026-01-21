@@ -33,7 +33,10 @@ export default function FavHeart({ id, iconScale = 30, scheduleStyle = false }: 
 
     const handlePress = () => {
         toggleFavoriteArtist(Number(id));
-        setIsFavorite(!isFavorite);
+        if (useAuth().isAuthenticated())
+            {
+                setIsFavorite(!isFavorite);
+            }
 
         scale.value = withTiming(1, { duration: 100 });
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
