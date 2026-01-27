@@ -69,9 +69,9 @@ export default function AuthScreen() {
             <Text style={[Typography.Header2, { color: theme.textDark}]}>Authentificate:</Text>
             </View>
             <View style={{ gap: 12 }} >
-              <Button buttonStyle="auth_3rdparty" title="Continue with Facebook" icon={<FacebookIcon fill={Palette.white} width={23} height={23} />} />
-              <Button buttonStyle="auth_3rdparty" title="Continue with Google" icon={<GoogleIcon fill={Palette.white} width={23} height={23} />} />
-              <Button buttonStyle="auth_credentials" title="Continue with Credentials" onPress={() => router.push('/login')} />
+              <Button variant="primary" title="Continue with Facebook" icon={<FacebookIcon fill={Palette.white} width={23} height={23} />} />
+              <Button variant="primary" title="Continue with Google" icon={<GoogleIcon fill={Palette.white} width={23} height={23} />} />
+              <Button variant="tertiary" title="Continue with Credentials" onPress={() => router.push('/login')} />
             </View>
           </View>
         </View>

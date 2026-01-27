@@ -25,7 +25,7 @@ export const ExpandableSection = ({ title, children }: Props) => {
                 <Text style={[Typography.Header2, { color: theme.textDark }]}>{title}</Text>
 
                 <Button
-                    buttonStyle="icon"
+                    variant="icon"
                     onPress={() => setExpanded(!expanded)}
                     icon={
                         <ChevronIcon

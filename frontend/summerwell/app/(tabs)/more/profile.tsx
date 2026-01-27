@@ -72,14 +72,18 @@ export default function ProfileScreen() {
 
             <View style={{ flex: 1, gap: 15, marginBottom: 30 }}>
 
-                <Button buttonStyle="primary" title="DELETE ACCOUNT" onPress={() => {
-                    auth.deleteAccount()
-                }} />
-
-                <Button buttonStyle="secondary" title="SAVE" onPress={() => {
+                <Button variant="secondary" title="SAVE" onPress={() => {
                     auth.updateData(firstName, lastName, phoneNumber, country, city, address)
                     auth.localUserData = { firstName, lastName, phoneNumber, country, city, address }
                 }} disabled={!isModified} />
+
+                <Button variant="tertiary" title="LOG OUT" onPress={() => {
+                    auth.logout()
+                }} />
+
+                <Button variant="primary" title="DELETE ACCOUNT" onPress={() => {
+                    auth.deleteAccount()
+                }} />
 
             </View>
 

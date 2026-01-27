@@ -36,7 +36,7 @@ export default function WalletLayout() {
           header: () => (
             <Header title="Profile" backgroundColor={theme.subheader}
               left={
-                <Button buttonStyle="icon" icon={<BackIcon width={30} height={30} fill={Palette.white} />} onPress={() => router.back()} />}
+                <Button variant="icon" icon={<BackIcon width={30} height={30} fill={Palette.white} />} onPress={() => router.back()} />}
             />
           ),
         }}

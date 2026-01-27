@@ -37,12 +37,10 @@ export const Colors = {
 
     primary: Palette.blue,
     secondary: Palette.orange,
+    tertiary: Palette.lightGray,
 
     timeIndicator: Palette.purple,
 
-    button1: Palette.blue,
-    buttonAuth: Palette.blue,
-    buttonAuthCred: Palette.gray,
     buttonTextLight: Palette.white,
     buttonTextDark: Palette.darkBlue,
 
@@ -51,7 +49,7 @@ export const Colors = {
     devider1: Palette.gray,
     devider1_50: Palette.lightGray,
     devider2: Palette.darkGray,
-    devider3: DarkTheme,
+    devider3: Palette.lightGray,
 
     mapGrass: "#71b65d",
     mapRoad: "#4f7f41",
@@ -72,12 +70,10 @@ export const Colors = {
 
     primary: Palette.blue,
     secondary: Palette.orange,
+    tertiary: Palette.lightGray,
 
     timeIndicator: Palette.purple,
 
-    button1: Palette.orange,
-    buttonAuth: Palette.blue,
-    buttonAuthCred: Palette.gray,
     buttonTextLight: Palette.white,
     buttonTextDark: Palette.darkBlue,
 

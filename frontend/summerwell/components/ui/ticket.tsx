@@ -64,7 +64,7 @@ export default function Ticket({ type, name = "Not set", description, color = Pa
                 {/* BUTTON */}
                 <Pressable style={{ backgroundColor: Palette.orange, width: 50, justifyContent: "center", alignItems: "center", borderTopRightRadius: 15, borderBottomRightRadius: 15 }} onPress={onPress}>
 
-                    <Button buttonStyle="icon" icon={inCart === false ? <PlusIcon fill={Palette.white} width={12} height={12} /> : <TrashIcon fill={Palette.white} width={20} height={20} />} />
+                    <Button variant="icon" icon={inCart === false ? <PlusIcon fill={Palette.white} width={12} height={12} /> : <TrashIcon fill={Palette.white} width={20} height={20} />} />
                 </Pressable>
             </View>
         )
@@ -92,7 +92,7 @@ export default function Ticket({ type, name = "Not set", description, color = Pa
 
 
                         <View style={{ width: 50, height: '100%', justifyContent: "center", alignItems: "center", borderLeftWidth: 2.5, borderStyle: "dashed", borderColor: theme.devider1 }}>
-                            <Button buttonStyle="icon" onPress={() => setExpanded(!expanded)} icon={<ChevronIcon fill={theme.textDark} style={{ transform: [{ rotate: expanded ? '90deg' : '-90deg' }] }} width={32} height={32} />} />
+                            <Button variant="icon" onPress={() => setExpanded(!expanded)} icon={<ChevronIcon fill={theme.textDark} style={{ transform: [{ rotate: expanded ? '90deg' : '-90deg' }] }} width={32} height={32} />} />
                         </View>
 
                     </View>
@@ -118,7 +118,7 @@ export default function Ticket({ type, name = "Not set", description, color = Pa
 
                         <View style={{ width: '100%', flexDirection: "column", justifyContent: "center", gap: 5, alignItems: "center" }}>
                             <Text style={[Typography.Header3, { color: theme.textDark, textAlign: 'center' }]}>Balance: <Text style={{ color: Palette.orange }}>{balance} RON</Text></Text>
-                            <Button buttonStyle="primary" title="TOP-UP" onPress={() => { }} />
+                            <Button variant="primary" title="TOP-UP" onPress={() => { }} />
                         </View>
 
                     </View>

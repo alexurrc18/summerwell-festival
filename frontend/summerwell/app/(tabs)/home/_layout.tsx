@@ -34,7 +34,7 @@ export default function WalletLayout() {
         options={{
           header: () => (
             <Header title="Notifications" backgroundColor={theme.header} 
-              left= { <Button buttonStyle="icon"  icon={<BackIcon width={30} height={30} fill={Palette.white} />}  onPress={() => router.back()} />
+              left= { <Button variant="icon"  icon={<BackIcon width={30} height={30} fill={Palette.white} />}  onPress={() => router.back()} />
               }
             />
           ),

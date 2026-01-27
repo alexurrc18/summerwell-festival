@@ -167,7 +167,7 @@ export default function HomeScreen() {
       <Animated.View style={{ backgroundColor: headerBackgroundColor, position: "absolute", flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%", paddingTop: insets.top, paddingLeft: 16, paddingRight: 16, paddingBottom: 5, zIndex: 10000 }}>
         <Image source={require("@/assets/images/logo.png")} style={{ left: 0, width: 40, height: 40, resizeMode: "contain" }} />
         <View style={{ right: 0 }} >
-          <Button buttonStyle="icon" icon={<BellIcon width={30} height={30} fill={Palette.white} onPress={() => router.push("/home/notifications")} />} />
+          <Button variant="icon" icon={<BellIcon width={30} height={30} fill={Palette.white} onPress={() => router.push("/home/notifications")} />} />
         </View>
       </Animated.View>
 
@@ -231,7 +231,7 @@ export default function HomeScreen() {
 
       {/* fixed footer */}
       <View style={{ paddingBottom: 8 }}>
-        <Button title="GET TICKETS BEFORE WE'RE OUT!" buttonStyle="important" onPress={() => {
+        <Button title="GET TICKETS BEFORE WE'RE OUT!" variant="banner" onPress={() => {
           router.push("/wallet")
           setTimeout(() => {
             router.push("/wallet/tickets");

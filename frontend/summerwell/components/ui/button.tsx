@@ -1,83 +1,91 @@
 import React from "react";
-import { TouchableOpacity, Text, View } from "react-native";
+import { TouchableOpacity, Text, ViewStyle, TextStyle } from "react-native";
 import { Typography } from "@/constants/typography";
-import { Palette } from "@/constants/theme";
+import { Palette, Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
-import { Colors } from "@/constants/theme";
 
+type ButtonVariant = "primary" | "secondary" | "tertiary" | "banner" | "icon";
 
 type Props = {
-    buttonStyle: "auth_3rdparty" | "auth_credentials" | "icon" | "important" | "secondary" | "primary";
-    title?: string | undefined;
-    icon?: React.ReactNode | undefined;
+    variant?: ButtonVariant;
+    title?: string;
+    icon?: React.ReactNode;
     onPress?: () => void;
     disabled?: boolean;
+    style?: ViewStyle;
 };
 
-export default function Button({ buttonStyle, title, icon, onPress, disabled = false }: Props) {
+export default function Button({ 
+    variant = "primary", 
+    title, 
+    icon, 
+    onPress, 
+    disabled = false,
+    style 
+}: Props) {
     const theme = Colors[useColorScheme() ?? "light"];
 
+    const getVariantStyles = (): { container: ViewStyle; text: string } => {
+        switch (variant) {
+            case "primary":
+                return {
+                    container: { backgroundColor: theme.primary, paddingVertical: 12, paddingHorizontal: 30 },
+                    text: theme.buttonTextLight,
+                };
+            case "secondary":
+                return {
+                    container: { backgroundColor: theme.secondary, paddingVertical: 12, paddingHorizontal: 30 },
+                    text: theme.buttonTextLight,
+                };
+            case "tertiary":
+                return {
+                    container: { backgroundColor: theme.tertiary, paddingVertical: 12, paddingHorizontal: 16 },
+                    text: theme.buttonTextDark,
+                };
+            case "icon":
+                return {
+                    container: { backgroundColor: "transparent", padding: 0, width: "auto" },
+                    text: "",
+                };
+            case "banner":
+                return {
+                    container: { backgroundColor: theme.secondary, paddingVertical: 15, paddingHorizontal: 20, borderRadius: 0 },
+                    text: theme.buttonTextLight,
+                };
+            default:
+                return {
+                    container: { backgroundColor: theme.secondary },
+                    text: theme.buttonTextLight,
+                };
+        }
+    };
 
-    if (buttonStyle === "auth_3rdparty") {
+    const { container, text: textColor } = getVariantStyles();
+
     return (
         <TouchableOpacity
-            onPress={onPress} disabled={disabled}
-            style={{opacity: disabled ? 0.5 : 1, backgroundColor: theme.buttonAuth, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 12, paddingHorizontal: 16, gap:13}}activeOpacity={0.85}>
-            {icon ? icon : null}
-            <Text style={[Typography.Button, { textAlign: "center", color: theme.buttonTextLight }]}>
-                {title}
-            </Text>
-        </TouchableOpacity>
-    );
-    } else if (buttonStyle === "auth_credentials") {
-    return (
-        <TouchableOpacity
-            onPress={onPress} disabled={disabled}
-           style={{opacity: disabled ? 0.5 : 1, backgroundColor: theme.buttonAuthCred, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 12, paddingHorizontal: 16, gap:13}}activeOpacity={0.85}>
-            <Text style={[Typography.Button, { textAlign: "center", color: theme.buttonTextDark }]}>
-                {title}
-            </Text>
-        </TouchableOpacity>
-    );
-    } else if (buttonStyle === "icon") {
-    return (
-        <TouchableOpacity
-            onPress={onPress} disabled={disabled}
-           style={{opacity: disabled ? 0.5 : 1, justifyContent: "center", alignItems: "center", borderRadius: 100, padding: 0}} activeOpacity={0.85}>
-            {icon ? icon : null}
-        </TouchableOpacity>
-    );
-    } else if (buttonStyle === "important"){
-        return (
-        <TouchableOpacity
-           onPress={onPress} disabled={disabled}
-           style={{opacity: disabled ? 0.5 : 1, backgroundColor: theme.button1, justifyContent: "center", alignItems: "center", flexDirection: "row", paddingVertical: 12, paddingHorizontal: 16, gap:13, height: 60}}activeOpacity={0.85}>
-            <Text style={[Typography.Button, { textAlign: "center", color: theme.buttonTextLight }]}>
-                {title}
-            </Text>
-        </TouchableOpacity>
-        )
-    } else if (buttonStyle === "secondary"){
-        return (
-        <TouchableOpacity
-            onPress={onPress} 
-            disabled={disabled} 
-            style={{opacity: disabled ? 0.5 : 1, backgroundColor: Palette.blue, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 10, paddingHorizontal: 30}} activeOpacity={0.85}>
-            <Text style={[Typography.Button, { textAlign: "center", color: theme.buttonTextLight }]}>
-                {title}
-            </Text>
-        </TouchableOpacity>
-            )
-    }   else if (buttonStyle === "primary"){
-        return (
-        <TouchableOpacity
-            onPress={onPress} 
+            onPress={onPress}
             disabled={disabled}
-            style={{opacity: disabled ? 0.5 : 1, backgroundColor: Palette.orange, justifyContent: "center", alignItems: "center", borderRadius: 100, flexDirection: "row", paddingVertical: 8, paddingHorizontal: 30}} activeOpacity={0.85}>
-            <Text style={[Typography.Button, { textAlign: "center", color: theme.buttonTextLight }]}>
-                {title}
-            </Text>
+            activeOpacity={0.85}
+            style={[
+                {
+                    borderRadius: 100,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    gap: 13,
+                    opacity: disabled ? 0.5 : 1,
+                },
+                container,
+                style,
+            ]}
+        >
+            {icon && icon}
+            {variant !== "icon" && title && (
+                <Text style={[Typography.Button, { textAlign: "center", color: textColor }]}>
+                    {title}
+                </Text>
+            )}
         </TouchableOpacity>
-            )
-    }
+    );
 }

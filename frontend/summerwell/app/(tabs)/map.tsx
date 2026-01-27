@@ -51,7 +51,7 @@ export default function MapScreen() {
     navigation.setOptions({
       header: () => (
         <Header title="Map" backgroundColor={theme.header} right={
-          <Button buttonStyle="icon" onPress={() => setFilterVisible((prev) => !prev)}
+          <Button variant="icon" onPress={() => setFilterVisible((prev) => !prev)}
             icon={<FilterIcon fill={isFilterVisible ? theme.selected : Palette.white} width={30} height={30} />} />
         } />
       ),
